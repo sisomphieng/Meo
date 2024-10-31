@@ -33,6 +33,10 @@ else:
 
 data = yf.download(symbol,start=sdate,end=edate)
 if data is not None:
-  st.line_chart(data['Close'],x_label="Date",y_label="Close")
+  st.line_chart(data['Close'])
+  st.area_chart(data['Close'])
+  st.bar_chart(data['Close'])
+  st.dataframe(data)
+#st.line_chart(data['Close'],x_label="Date",y_label="Close")
 else:
     st.error("Failed to fetch historical data.")
