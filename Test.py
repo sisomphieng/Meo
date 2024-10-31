@@ -37,7 +37,7 @@ if data is not None:
                                       high=data['High'],
                                       low=data['Low'],
                                       close=data['Close'])])
-  st.candle_plot(data,up_color='green',down_color='red')
+     st.plotly_chart(fig)
 #st.line_chart(data['Close'],x_label="Date",y_label="Close")
 else:
  st.error("Failed to fetch historical data.")
