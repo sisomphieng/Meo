@@ -2,10 +2,11 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import datetime
 import plotly.graph_objs as go
-
 import appdirs as ad
-ad.user_cache_dir = lambda *args: "/tmp"
 import yfinance as yf
+!pip -q install streamlit appdirs
+
+ad.user_cache_dir = lambda *args: "/tmp"
 
 # Specify title and logo for the webpage.
 # Set up your web app
@@ -13,7 +14,7 @@ st.set_page_config(layout="wide", page_title="WebApp_Demo")
 
 # Sidebar
 st.sidebar.title("Input")
-symbol = st.sidebar.text_input('Please enter the stock symbol: ', 'IBM').upper()
+symbol = st.sidebar.text_input('Please enter the stock symbol: ', 'NVDA').upper()
 # Selection for a specific time frame.
 col1, col2 = st.sidebar.columns(2, gap="medium")
 with col1:
@@ -27,13 +28,14 @@ stock = yf.Ticker(symbol)
 if stock is not None:
   # Display company's basics
   st.write(f"# Sector : {stock.info['sector']}")
-  st.write(f"# Company Beta : {stock.info['beta']}")  
+  st.write(f"# Company Beta : {stock.info['beta']}")
 else:
   st.error("Failed to fetch historical data.")
 
 data = yf.download(symbol,start=sdate,end=edate)
 if data is not None:
-   fig = go.Figure(data=[go.Candlestick(x=data.index,
+  # Create a candlestick chart using Plotly
+  fig = go.Figure(data=[go.Candlestick(x=data.index,
                                       open=data['Open'],
                                       high=data['High'],
                                       low=data['Low'],
@@ -42,6 +44,10 @@ if data is not None:
                     xaxis_title="Date",
                     yaxis_title="Price")
   st.plotly_chart(fig)
+
+  st.line_chart(data['Close'],x_label="Date",y_label="Close")
+else:
+    st.error("Failed to fetch historical data.")
 
   st.line_chart(data['Close'],x_label="Date",y_label="Close")
 else:
