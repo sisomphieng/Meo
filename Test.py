@@ -47,7 +47,3 @@ if data is not None:
   st.line_chart(data['Close'],x_label="Date",y_label="Close")
 else:
     st.error("Failed to fetch historical data.")
-
-  st.line_chart(data['Close'],x_label="Date",y_label="Close")
-else:
-    st.error("Failed to fetch historical data.")
