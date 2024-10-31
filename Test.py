@@ -27,12 +27,17 @@ if stock is not None:
   # Display company's basics
   st.write(f"# Sector : {stock.info['sector']}")
   st.write(f"# Company Beta : {stock.info['beta']}")
-  st.write(f"# Company Description : {stock.info['beta']}")
 else:
   st.error("Failed to fetch historical data.")
 
 data = yf.download(symbol,start=sdate,end=edate)
 if data is not None:
- st.line_chart(data['Close'],x_label="Date",y_label="Close")
+ fig=go.Figure(data=[go.Candlestick(x=data.index,
+                                      open=data['Open'],
+                                      high=data['High'],
+                                      low=data['Low'],
+                                      close=data['Close'])])
+  st.candle_plot(data,up_color='green',down_color='red')
+#st.line_chart(data['Close'],x_label="Date",y_label="Close")
 else:
  st.error("Failed to fetch historical data.")
