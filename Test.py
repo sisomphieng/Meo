@@ -27,7 +27,6 @@ if stock is not None:
   # Display company's basics
   st.write(f"# Sector : {stock.info['sector']}")
   st.write(f"# Company Beta : {stock.info['beta']}")
-  st.write(f"# Company Description : {stock.info['']}")
 else:
   st.error("Failed to fetch historical data.")
 
