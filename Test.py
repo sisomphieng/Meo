@@ -4,7 +4,6 @@ import datetime
 import plotly.graph_objs as go
 import appdirs as ad
 import yfinance as yf
-!pip -q install streamlit appdirs
 
 ad.user_cache_dir = lambda *args: "/tmp"
 
