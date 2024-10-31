@@ -33,7 +33,16 @@ else:
 
 data = yf.download(symbol,start=sdate,end=edate)
 if data is not None:
-  st.candle_plot(data,up_color='green',down_color='red') 
-#st.line_chart(data['Close'],x_label="Date",y_label="Close")
+   fig = go.Figure(data=[go.Candlestick(x=data.index,
+                                      open=data['Open'],
+                                      high=data['High'],
+                                      low=data['Low'],
+                                      close=data['Close'])])
+  fig.update_layout(title=f"{symbol} Candlestick Chart",
+                    xaxis_title="Date",
+                    yaxis_title="Price")
+  st.plotly_chart(fig)
+
+  st.line_chart(data['Close'],x_label="Date",y_label="Close")
 else:
     st.error("Failed to fetch historical data.")
