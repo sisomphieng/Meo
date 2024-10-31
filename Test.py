@@ -2,10 +2,10 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import datetime
 import plotly.graph_objs as go
-import appdirs as ad
-import yfinance as yf
 
+import appdirs as ad
 ad.user_cache_dir = lambda *args: "/tmp"
+import yfinance as yf
 
 # Specify title and logo for the webpage.
 # Set up your web app
@@ -33,17 +33,7 @@ else:
 
 data = yf.download(symbol,start=sdate,end=edate)
 if data is not None:
-  # Create a candlestick chart using Plotly
-  fig = go.Figure(data=[go.Candlestick(x=data.index,
-                                      open=data['Open'],
-                                      high=data['High'],
-                                      low=data['Low'],
-                                      close=data['Close'])])
-  fig.update_layout(title=f"{symbol} Candlestick Chart",
-                    xaxis_title="Date",
-                    yaxis_title="Price")
-  st.plotly_chart(fig)
-
+  st.candle_plot(data,up_color='green',down_color='red')
   st.line_chart(data['Close'],x_label="Date",y_label="Close")
 else:
     st.error("Failed to fetch historical data.")
