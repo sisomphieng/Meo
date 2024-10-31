@@ -2,7 +2,6 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import datetime
 import plotly.graph_objs as go
-
 import appdirs as ad
 ad.user_cache_dir = lambda *args: "/tmp"
 import yfinance as yf
@@ -33,7 +32,6 @@ else:
 
 data = yf.download(symbol,start=sdate,end=edate)
 if data is not None:
-  st.candle_plot(data,up_color='green',down_color='red')
   st.line_chart(data['Close'],x_label="Date",y_label="Close")
 else:
-    st.error("Failed to fetch historical data.")
+ st.error("Failed to fetch historical data.")
