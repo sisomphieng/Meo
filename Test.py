@@ -13,21 +13,21 @@ risk_aversion = st.radio("Select your risk aversion level:", ["High", "Middle", 
 # Step 2: Portfolio Allocation Based on Risk Aversion
 st.header("Suggested Portfolio Allocation")
 if risk_aversion == "High":
-    st.write("60% Small Stocks, 30% S&P 500, 10% Corporate Bonds")
+    st.write("50% T-Bills, 30% Corporate Bonds, 10% S&P 500, 10% Small Stocks")
 elif risk_aversion == "Middle":
     st.write("40% S&P 500, 30% Corporate Bonds, 20% Small Stocks, 10% T-Bills")
 else:
-    st.write("50% T-Bills, 30% Corporate Bonds, 10% S&P 500, 10% Small Stocks")
+    st.write("60% Small Stocks, 30% S&P 500, 10% Corporate Bonds")
 
 # Step 3: Select Stocks Based on Risk Aversion
 st.header("Stock Selection Based on Risk Aversion")
 stocks = []
 if risk_aversion == "High":
-    stocks = ["TSLA", "NVDA", "PLTR", "ROKU", "DKNG"]
+    stocks = ["JNJ", "PG", "KO", "PEP", "MSFT"]
 elif risk_aversion == "Middle":
     stocks = ["AAPL", "MSFT", "CSCO", "HD", "V"]
 else:
-    stocks = ["JNJ", "PG", "KO", "PEP", "MSFT"]
+    stocks = ["TSLA", "NVDA", "PLTR", "ROKU", "DKNG"]
 
 st.write("Selected Stocks:", ", ".join(stocks))
 
