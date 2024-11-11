@@ -1,42 +1,48 @@
 import streamlit as st
-import matplotlib.pyplot as plt
-import datetime
-import plotly.graph_objs as go
-
-import appdirs as ad
-ad.user_cache_dir = lambda *args: "/tmp"
 import yfinance as yf
+import numpy as np
+import pandas as pd
 
-# Specify title and logo for the webpage.
-# Set up your web app
-st.set_page_config(layout="wide", page_title="WebApp_Demo")
+# Set the title and layout for the app
+st.title("Investment Portfolio Advisor")
 
-# Sidebar
-st.sidebar.title("Input")
-symbol = st.sidebar.text_input('Please enter the stock symbol: ', 'NVDA').upper()
-# Selection for a specific time frame.
-col1, col2 = st.sidebar.columns(2, gap="medium")
-with col1:
-    sdate = st.date_input('Start Date',value=datetime.date(2024,1,1))
-with col2:
-    edate = st.date_input('End Date',value=datetime.date.today())
+# Step 1: Risk Aversion Questionnaire
+st.header("Investor Risk Aversion")
+risk_aversion = st.radio("Select your risk aversion level:", ["High", "Middle", "Low"])
 
-st.title(f"{symbol}")
-
-stock = yf.Ticker(symbol)
-if stock is not None:
-  # Display company's basics
-  st.write(f"# Sector : {stock.info['sector']}")
-  st.write(f"# Industry : {stock.info['industry']}")
-  st.write(f"# Full Time Employees : {stock.info['fullTimeEmployees']}")
-  st.write(f"# Company Beta : {stock.info['beta']}")
+# Step 2: Portfolio Allocation Based on Risk Aversion
+st.header("Suggested Portfolio Allocation")
+if risk_aversion == "High":
+    st.write("60% Small Stocks, 30% S&P 500, 10% Corporate Bonds")
+elif risk_aversion == "Middle":
+    st.write("40% S&P 500, 30% Corporate Bonds, 20% Small Stocks, 10% T-Bills")
 else:
-  st.error("Failed to fetch historical data.")
+    st.write("50% T-Bills, 30% Corporate Bonds, 10% S&P 500, 10% Small Stocks")
 
-data = yf.download(symbol,start=sdate,end=edate)
-if data is not None:
-  st.bar_chart(data['Close'])
-  st.dataframe(data)
-#st.line_chart(data['Close'],x_label="Date",y_label="Close")
+# Step 3: Select Stocks Based on Risk Aversion
+st.header("Stock Selection Based on Risk Aversion")
+stocks = []
+if risk_aversion == "High":
+    stocks = ["TSLA", "NVDA", "PLTR", "ROKU", "DKNG"]
+elif risk_aversion == "Middle":
+    stocks = ["AAPL", "MSFT", "CSCO", "HD", "V"]
 else:
-    st.error("Failed to fetch historical data.")
+    stocks = ["JNJ", "PG", "KO", "PEP", "MSFT"]
+
+st.write("Selected Stocks:", ", ".join(stocks))
+
+# Step 4: Input Investment Amount
+investment_amount = st.number_input("Enter the amount you want to invest:", min_value=100, value=1000)
+
+# Step 5: Calculate and Display Portfolio Risk and Return
+st.header("Portfolio Risk and Return")
+
+# Fetch stock data and calculate expected return and variance (risk)
+# Note: You would typically include more logic to compute this from historical data
+if st.button("Calculate"):
+    # Dummy risk/return calculation (replace with actual calculations)
+    expected_return = round(np.random.uniform(5, 15), 2)  # Placeholder for expected return %
+    risk = round(np.random.uniform(1, 10), 2)  # Placeholder for portfolio variance %
+
+    st.write(f"Expected Portfolio Return: {expected_return}%")
+    st.write(f"Portfolio Risk (Variance): {risk}%")
