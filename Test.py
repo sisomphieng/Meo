@@ -367,20 +367,49 @@ if st.session_state.page == "final_page":
             try:
                 stock_data = yf.download(selected_stocks, start="2023-01-01")['Adj Close']
                 rets = stock_data.pct_change().dropna()  # Calculate daily returns
-
-                # Calculate optimal portfolio using riskfolio
+   # Calculate optimal portfolio weights (example: minimizing risk)
                 port = rp.Portfolio(returns=rets)
                 port.assets_stats(method_mu='hist', method_cov='hist')  # Historical mean and covariance
+                weights = port.optimization(model='Classic', rm='MV', obj='MinRisk', rf=0, hist=True)
+
+                # Calculate expected portfolio return
+                expected_return = (weights.T * rets.mean()).sum() * 252  # Annualize return assuming 252 trading days
+
+                # Display optimal portfolio weights
+                st.write("**Optimal Portfolio Weights (Minimizing Risk)**")
+                st.write(weights.T)
+
+                # Display portfolio composition
+                fig, ax = plt.subplots(figsize=(10, 8))
+                rp.plot_pie(weights, title="Optimal Portfolio Composition", ax=ax)
+                st.pyplot(fig)
+
+                # Calculate expected return based on investment amount
+                expected_return_amount = investment_amount * expected_return
+
+                # Display the expected return
+                st.markdown(
+                    f"""
+                    <div style="text-align: center; font-size: 20px;">
+                        Expected annual return based on your investment: <strong>${expected_return_amount:,.2f}</strong>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+                
+                # Calculate optimal portfolio using riskfolio
+               # port = rp.Portfolio(returns=rets)
+               # port.assets_stats(method_mu='hist', method_cov='hist')  # Historical mean and covariance
              
                 # Weights in case of minimizing risk
-                min_risk_weights = port.optimization(model='Classic', rm='MV', obj='MinRisk', rf=0, hist=True)
-                st.write("**Optimal Portfolio Weights (Minimizing Risk)**")
-                st.write(min_risk_weights.T)
+               # min_risk_weights = port.optimization(model='Classic', rm='MV', obj='MinRisk', rf=0, hist=True)
+               # st.write("**Optimal Portfolio Weights (Minimizing Risk)**")
+               # st.write(min_risk_weights.T)
 
                 # Display portfolio composition for minimizing risk
-                fig, ax = plt.subplots(figsize=(10, 8))
-                rp.plot_pie(min_risk_weights, title="Optimal Portfolio Composition (Minimizing Risk)", ax=ax)
-                st.pyplot(fig)
+               # fig, ax = plt.subplots(figsize=(10, 8))
+              # rp.plot_pie(min_risk_weights, title="Optimal Portfolio Composition (Minimizing Risk)", ax=ax)
+                #st.pyplot(fig)
 
                 # Weights in case of maximizing returns
                 max_return_weights = port.optimization(model='Classic', rm='MV', obj='MaxRet', rf=0.5, hist=True)
