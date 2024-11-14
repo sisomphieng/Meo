@@ -6,12 +6,4 @@ yfinance
 plotly
 pandas 
 scipy
-clarabel
-cvxpy
-scikit-learn
-statsmodels
-arch
-XlsxWriter
-networkx
-astropy
-pybind11
+riskfolio-lib
