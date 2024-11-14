@@ -380,15 +380,7 @@ if st.session_state.page == "final_page":
                 expected_return = (min_risk_weights.T * rets.mean()).sum() * 252  # Annualize return assuming 252 trading days
                  # Calculate expected return based on investment amount
                 expected_return_amount = investment_amount * expected_return
-                 # Display the expected return
-                #st.markdown(
-                   # f"""
-                  #  <div style="text-align: center; font-size: 20px;">
-                     #   Expected annual return based on your investment: <strong>${expected_return_amount:,.2f}</strong>
-                  #  </div>
-                 #   """,
-                   # unsafe_allow_html=True
-               # )
+              
                 # Display portfolio composition for minimizing risk
                 fig, ax = plt.subplots(figsize=(10, 8))
                 rp.plot_pie(min_risk_weights, title="Optimal Portfolio Composition (Minimizing Risk)", ax=ax)
