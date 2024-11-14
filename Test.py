@@ -361,62 +361,38 @@ if st.session_state.page == "final_page":
         # Input for stock selection (multiselect)
         selected_stocks = st.multiselect("Select Stocks:", stock_options)
 
-        # Input for investment amount for each selected stock
-        stock_allocations = {}
-        for stock in selected_stocks:
-            allocation = st.number_input(f"Investment amount for {stock}:", min_value=0.0)
-            stock_allocations[stock] = allocation
-
-        if selected_stocks and stock_allocations:
+        # Proceed only if stocks are selected
+        if selected_stocks:
+            # Fetch historical data for selected stocks
             try:
-                # Fetch historical adjusted close price data for selected stocks
                 stock_data = yf.download(selected_stocks, start="2023-01-01")['Adj Close']
+                rets = stock_data.pct_change().dropna()  # Calculate daily returns
 
-                # Calculate daily returns (percentage change)
-                returns = stock_data.pct_change().dropna()
+                # Calculate optimal portfolio using riskfolio
+                port = rp.Portfolio(returns=rets)
+                port.assets_stats(method_mu='hist', method_cov='hist')  # Historical mean and covariance
+             
+                # Weights in case of minimizing risk
+                min_risk_weights = port.optimization(model='Classic', rm='MV', obj='MinRisk', rf=0, hist=True)
+                st.write("**Optimal Portfolio Weights (Minimizing Risk)**")
+                st.write(min_risk_weights.T)
 
-                # Optimize portfolio weights (minimize risk)
-                optimal_weights = optimize_portfolio(returns)
+                # Display portfolio composition for minimizing risk
+                fig, ax = plt.subplots(figsize=(10, 8))
+                rp.plot_pie(min_risk_weights, title="Optimal Portfolio Composition (Minimizing Risk)", ax=ax)
+                st.pyplot(fig)
 
-                # Calculate portfolio composition (weight allocation)
-                portfolio_composition = {selected_stocks[i]: optimal_weights[i] for i in range(len(selected_stocks))}
+                # Weights in case of maximizing returns
+                max_return_weights = port.optimization(model='Classic', rm='MV', obj='MaxRet', rf=0.5, hist=True)
+                st.write("**Optimal Portfolio Weights (Maximizing Returns)**")
+                st.write(max_return_weights.T)
 
-                # Display portfolio composition
-                st.write("**Optimal Portfolio Weights (Minimized Risk):**")
-                for stock, weight in portfolio_composition.items():
-                    st.write(f"{stock}: {weight * 100:.2f}%")
-
-                # Display Pie Chart of Portfolio Composition
-                fig, ax = plt.subplots()
-                ax.pie(optimal_weights, labels=selected_stocks, autopct='%1.1f%%', startangle=90)
-                ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+                # Display portfolio composition for maximizing returns
+                fig, ax = plt.subplots(figsize=(10, 8))
+                rp.plot_pie(max_return_weights, title="Optimal Portfolio Composition (Maximizing Returns)", ax=ax)
                 st.pyplot(fig)
 
             except Exception as e:
                 st.error(f"Error building portfolio: {e}")
-
-# Define the portfolio optimization function (to minimize risk)
-def optimize_portfolio(returns):
-    # Define the number of assets
-    num_assets = len(returns.columns)
-
-    # Define the initial guess for weights (even distribution)
-    initial_weights = np.ones(num_assets) / num_assets
-
-    # Define the bounds for weights (between 0 and 1)
-    bounds = tuple((0, 1) for _ in range(num_assets))
-
-    # Define the constraint that the sum of weights must be equal to 1
-    constraints = ({'type': 'eq', 'fun': lambda weights: np.sum(weights) - 1})
-
-    # Define the objective function (minimize portfolio risk, which is the portfolio variance)
-    def objective_function(weights):
-        # Portfolio variance: w' * Cov * w
-        portfolio_variance = np.dot(weights.T, np.dot(returns.cov(), weights))
-        return portfolio_variance
-
-    # Perform the optimization
-    result = minimize(objective_function, initial_weights, method='SLSQP', bounds=bounds, constraints=constraints)
-
-    # Return the optimal portfolio weights
-    return result.x
+    else:
+        st.warning("Please complete the Risk Tolerance Quiz first to get stock suggestions.")
