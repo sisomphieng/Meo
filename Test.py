@@ -376,11 +376,7 @@ if st.session_state.page == "final_page":
                 min_risk_weights = port.optimization(model='Classic', rm='MV', obj='MinRisk', rf=0, hist=True)
                 st.write("**Optimal Portfolio Weights (Minimizing Risk)**")
                 st.write(min_risk_weights.T)
-                # Calculate expected portfolio return
-                expected_return = (min_risk_weights.T * rets.mean()).sum() * 252  # Annualize return assuming 252 trading days
-                 # Calculate expected return based on investment amount
-                expected_return_amount = investment_amount * expected_return
-              
+
                 # Display portfolio composition for minimizing risk
                 fig, ax = plt.subplots(figsize=(10, 8))
                 rp.plot_pie(min_risk_weights, title="Optimal Portfolio Composition (Minimizing Risk)", ax=ax)
