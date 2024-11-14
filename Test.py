@@ -333,7 +333,7 @@ if st.session_state.page == "final_page":
     st.title("Portfolio Builder")
 
     # Investment amount input
-    investment_amount = st.number_input("Enter total investment amount:", min_value=0.0, step=1000.0)
+    #investment_amount = st.number_input("Enter total investment amount:", min_value=0.0, step=1000.0)
 
     # Ensure the risk tolerance level from the quiz is stored in the session state
     if "risk_tolerance_level" not in st.session_state:
@@ -383,14 +383,14 @@ if st.session_state.page == "final_page":
                 st.pyplot(fig)
 
                 # Weights in case of maximizing returns
-                max_return_weights = port.optimization(model='Classic', rm='MV', obj='MaxRet', rf=0.5, hist=True)
-                st.write("**Optimal Portfolio Weights (Maximizing Returns)**")
-                st.write(max_return_weights.T)
+                #max_return_weights = port.optimization(model='Classic', rm='MV', obj='MaxRet', rf=0.5, hist=True)
+                #st.write("**Optimal Portfolio Weights (Maximizing Returns)**")
+                #st.write(max_return_weights.T)
 
                 # Display portfolio composition for maximizing returns
-                fig, ax = plt.subplots(figsize=(10, 8))
-                rp.plot_pie(max_return_weights, title="Optimal Portfolio Composition (Maximizing Returns)", ax=ax)
-                st.pyplot(fig)
+                #fig, ax = plt.subplots(figsize=(10, 8))
+                #rp.plot_pie(max_return_weights, title="Optimal Portfolio Composition (Maximizing Returns)", ax=ax)
+                #st.pyplot(fig)
 
             except Exception as e:
                 st.error(f"Error building portfolio: {e}")
