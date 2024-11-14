@@ -164,11 +164,12 @@ if st.session_state.page == "quiz":
 
     # Store user's responses
     user_answers = {}
-
-    # Display questions and get user input
-    for question, data in questions.items():
+    for i, (question, data) in enumerate (questions.items()):
         st.subheader(question)
-        user_answers[question] = st.radio("Select your answer:", data["options"], key=question)
+        key = f"question_{i}" # Create a unique key for each question
+        if key not in st.session_state:
+            st.session_state[key] = None # Initialize with None
+        user_answers[question] = st.radio("Select your answer:", data["options"], key=key, index=None)
 
 
     # "Submit" button with st.button()
