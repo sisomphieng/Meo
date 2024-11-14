@@ -395,4 +395,4 @@ if st.session_state.page == "final_page":
             except Exception as e:
                 st.error(f"Error building portfolio: {e}")
     #else:
-        st.warning("Please complete the Risk Tolerance Quiz first to get stock suggestions.")
+        #st.warning("Please complete the Risk Tolerance Quiz first to get stock suggestions.")
