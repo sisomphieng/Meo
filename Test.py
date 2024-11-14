@@ -223,6 +223,7 @@ if st.session_state.page == "quiz":
             # Determine risk tolerance level and display it with only risk tolerance in bold
             for score_range, risk_tolerance in risk_tolerance_categories.items():
                 if score_range[0] <= score <= score_range[1]:
+                    st.session_state.risk_tolerance_level = risk_tolerance
                     st.markdown(
                         f"""
                         <div style="text-align: center; font-size: 22px;">
@@ -231,7 +232,6 @@ if st.session_state.page == "quiz":
                         """,
                         unsafe_allow_html=True
                     )
-
             if st.button("Next", on_click=go_to_page_2, key="page_2"):
                 pass
 
@@ -394,5 +394,5 @@ if st.session_state.page == "final_page":
 
             except Exception as e:
                 st.error(f"Error building portfolio: {e}")
-    if "risk_tolerance_level" not in st.session_state:
+    else:
         st.warning("Please complete the Risk Tolerance Quiz first to get stock suggestions.")
