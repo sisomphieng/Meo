@@ -5,4 +5,3 @@ appdirs
 yfinance
 plotly
 pandas 
-scipy.optimize
